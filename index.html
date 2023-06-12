@@ -1,13 +1,21 @@
-<p>This is a demo for the <strong>html-midi-player</strong> package. For more information, see <a href="https://github.com/cifkao/html-midi-player" target="_blank">its GitHub repository</a>.</p>
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>HTML MIDI Player with Fragments</title>
+  <link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
 
 <section id="section3">
-<h2>Custom player and visualizer style</h2>
+<h2>Midi Fragment Player</h2>
 <midi-player
   id="myPlayer"
   sound-font visualizer="#section3 midi-visualizer">
 </midi-player>
 <midi-visualizer
-  id="myVisualizer"
+  id="myVisualizer">
 </midi-visualizer>
 </section>
 
@@ -23,7 +31,8 @@
 
 <button id="loadbutton" type="button">LOAD</button>
 
-
-
-
 <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
+<script type="module" src="./script.js"></script>
+
+</body>
+</html>

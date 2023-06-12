@@ -1,4 +1,10 @@
 # HTML MIDI Player with Fragments
 
-A Pen created on CodePen.io. Original URL: [https://codepen.io/gmcerveny/pen/mdQyaEM/94804176177831df5b5122540084c195](https://codepen.io/gmcerveny/pen/mdQyaEM/94804176177831df5b5122540084c195).
+This is a demo connecting the html-midi-player and midi-file packages. 
+
+Simply run a local webserver from this projects root directory.
+
+For more information, see GitHub repositories: 
+- https://github.com/cifkao/html-midi-player
+- https://github.com/carter-thaxton/midi-file
 
