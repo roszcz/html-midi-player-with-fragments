@@ -4,33 +4,16 @@ import * as buffer from "https://cdn.skypack.dev/buffer@6.0.3";
 const parseMidi = midiFile.parseMidi;
 const writeMidi = midiFile.writeMidi;
 
+const midiFileURL = './recording.mid';
+const dataURL = './data.json';
+
 window.player = document.getElementById('myPlayer');
 window.visualizer = document.getElementById('myVisualizer');
 
-window.fragmentInput = document.getElementById('fragment');
-window.phraseInput = document.getElementById('phrase');
-window.loadbutton = document.getElementById('loadbutton');
-window.datastatus = document.getElementById('datastatus');
+// Directly set player URL
+// player.src = midiFileURL;
+// visualizer.src = midiFileURL;
 
-// player.src = 'https://assets.codepen.io/6275315/jagoda.mid';
-// visualizer.src = 'https://assets.codepen.io/6275315/jagoda.mid';
-
-async function readMidiFileFromURL(url) {
-  console.log("reading file");
-  try {
-    window.response = await fetch(url);
-    window.blob = await response.blob();
-    window.outputSequence = await core.blobToNoteSequence(blob);
-    
-    player.noteSequence = outputSequence;
-    visualizer.noteSequence = outputSequence;
-  } catch (error) {
-    console.log("error", error)
-  }
-
-}
-
-// readMidiFileFromURL("https://assets.codepen.io/6275315/jagoda.mid");
 
 async function fragmentMidiFileFromURL(url) {
   console.log("reading file");
@@ -80,12 +63,18 @@ async function loadMidiFragment(start, end) {
     visualizer.noteSequence = outputSequence;  
 }
 
-fragmentMidiFileFromURL("https://assets.codepen.io/6275315/jagoda.mid");
+
+window.fragmentInput = document.getElementById('fragment');
+window.phraseInput = document.getElementById('phrase');
+window.loadbutton = document.getElementById('loadbutton');
+window.datastatus = document.getElementById('datastatus');
+
+// fragmentMidiFileFromURL(midiFileURL);
 
 window.loadFragmentIndex = loadFragmentIndex;
 window.loadMidiFragment = loadMidiFragment;
 
-const response = await fetch("https://assets.codepen.io/6275315/data-2.json");
+const response = await fetch(dataURL);
 const data = await response.json();
 window.data = data;
 
@@ -101,7 +90,7 @@ Fragment[${fragmentIndex}]: 0 - ${data.fragments[fragmentIndex].length - 1}`;
 // loadMidiFragment(phrase.start_note_index, phrase.end_note_index)
 
 // loadFragmentIndex(0,0);
-updateDataStatus(0);
+// updateDataStatus(0);
 
 loadbutton.addEventListener("click", function () {
   loadFragmentIndex(fragmentInput.value, phraseInput.value);
