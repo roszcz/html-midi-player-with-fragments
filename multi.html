@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>HTML MIDI Player with Fragments</title>
+  <link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+
+<section id="section3">
+<h2>Midi Fragment Player</h2>
+<midi-player
+  id="myPlayer1"
+  sound-font visualizer="#myVisualizer1">
+</midi-player>
+<midi-visualizer
+  id="myVisualizer1">
+</midi-visualizer>
+
+<h2>Midi Fragment Player</h2>
+<midi-player
+  id="myPlayer2"
+  sound-font visualizer="#myVisualizer2">
+</midi-player>
+<midi-visualizer
+  id="myVisualizer2">
+</midi-visualizer>
+</section>
+
+<script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
+<script type="module" src="./multi.js"></script>
+
+</body>
+</html>

@@ -7,8 +7,11 @@ const writeMidi = midiFile.writeMidi;
 const midiFileURL = './recording.mid';
 const dataURL = './data.json';
 
-window.player = document.getElementById('myPlayer');
-window.visualizer = document.getElementById('myVisualizer');
+window.player1 = document.getElementById('myPlayer1');
+window.visualizer1 = document.getElementById('myVisualizer1');
+
+window.player2 = document.getElementById('myPlayer2');
+window.visualizer2 = document.getElementById('myVisualizer2');
 
 // Directly set player URL
 // player.src = midiFileURL;
@@ -52,24 +55,14 @@ async function sliceMidiFileBufferToSequence(midiFileBuffer, start, end) {
     return outputSequence;
 }
 
-function updateDataStatus(fragmentIndex) {
-  datastatus.innerText = `Fragments: 0 - ${data.fragments.length - 1}
-Fragment[${fragmentIndex}]: 0 - ${data.fragments[fragmentIndex].length - 1}`;
-}
+const response1 = await fetch(dataURL);
+const data1 = await response1.json();
 
-const response = await fetch(dataURL);
-const data = await response.json();
+const midiBuffer1 = await loadMidiFileBufferFromURL(midiFileURL);
+updateSequence(data1, midiBuffer1, 0, 0, player1, visualizer1);
 
-window.datastatus = document.getElementById('datastatus');
+const response2 = await fetch(dataURL);
+const data2 = await response2.json();
 
-const midiBuffer = await loadMidiFileBufferFromURL(midiFileURL);
-updateSequence(data, midiBuffer, 0, 0, player, visualizer);
-
-window.fragmentInput = document.getElementById('fragment');
-window.phraseInput = document.getElementById('phrase');
-window.loadbutton = document.getElementById('loadbutton');
-
-loadbutton.addEventListener("click", function () {
-  updateDataStatus(fragmentInput.value);
-  updateSequence(data, midiBuffer, fragmentInput.value, phraseInput.value, player, visualizer);
-})
+const midiBuffer2 = await loadMidiFileBufferFromURL(midiFileURL);
+updateSequence(data2, midiBuffer2, 0, 1, player2, visualizer2);
