@@ -1,12 +1,14 @@
+import * as midiFile from "https://cdn.skypack.dev/midi-file@1.2.4";
 import * as buffer from "https://cdn.skypack.dev/buffer@6.0.3";
-const midi = new Midi();
+
+const parseMidi = midiFile.parseMidi;
+const writeMidi = midiFile.writeMidi;
 
 const midiFileURL = './tester.mid';
 const dataURL = './tester.json';
 
 window.player = document.getElementById('myPlayer');
 window.visualizer = document.getElementById('myVisualizer');
-visualizer.config = {minPitch: 0, maxPitch: 127};
 
 // Directly set player URL
 // player.src = midiFileURL;
@@ -31,26 +33,19 @@ async function updateSequence(data, midiBuffer, fragmentIndex, variantIndex, pla
 
 async function sequenceFromFragmentIndex(data, midiFileBuffer, fragmentIndex, phraseIndex) {
   const phrase = data.fragments[fragmentIndex][phraseIndex];
-  const sequence = await sliceMidiFileBufferToSequence(midiFileBuffer, phrase.start_note_index, phrase.end_note_index, phrase.start_time, phrase.finish_time)
+  const sequence = await sliceMidiFileBufferToSequence(midiFileBuffer, phrase.start_note_index, phrase.end_note_index)
   return sequence;
 }
 
-async function sliceMidiFileBufferToSequence(midiFileBuffer, start, end, start_time, finish_time) {
-    console.log(start_time,finish_time);
-    const parsed = new Midi(midiFileBuffer);
-    const fragment = parsed.clone();
+async function sliceMidiFileBufferToSequence(midiFileBuffer, start, end) {
+    const parsed = parseMidi(midiFileBuffer);
+    const fragment = parseMidi(midiFileBuffer);
     window.parsed = parsed;
 
-    window.prevnotes = parsed.tracks[0].notes;
-    const notes = parsed.tracks[0].notes.filter(note => note.time >= start_time && note.time <= finish_time);
-    window.notes = notes;
-
-    const startTick = notes[0].ticks
-    notes.forEach(note => note.ticks -= startTick)
-    fragment.tracks[0].notes = notes;
-    window.fragment = fragment;
+    const notes = parsed.tracks[0].filter(event => event.type == 'noteOn' || event.type == 'noteOff');
+    fragment.tracks[0] = notes.slice(start * 2,end * 2);
         
-    const output = fragment.toArray();
+    const output = writeMidi(fragment);
     const outputBuffer = buffer.Buffer.from(output);
     const outputBlob = new Blob([outputBuffer]);
     const outputSequence = await core.blobToNoteSequence(outputBlob);
@@ -70,9 +65,6 @@ updateDataStatus(0);
 window.datastatus = document.getElementById('datastatus');
 
 const midiBuffer = await loadMidiFileBufferFromURL(midiFileURL);
-
-window.data = data;
-window.midiBuffer = midiBuffer;
 updateSequence(data, midiBuffer, 0, 0, player, visualizer);
 
 window.fragmentInput = document.getElementById('fragment');
