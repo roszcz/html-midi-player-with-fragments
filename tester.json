@@ -2,6 +2,20 @@
     "fragments": [
         [
             {
+                "start_time": 60.86979166666666,
+                "finish_time": 75.29166666666666,
+                "start_note_index": 254,
+                "finish_note_index": 263
+            },
+            {
+                "start_time": 80.25,
+                "finish_time": 83.046875,
+                "start_note_index": 263,
+                "finish_note_index": 270
+            }
+        ],
+        [
+            {
                 "start_time": 0.25,
                 "finish_time": 18.979166666666664,
                 "start_note_index": 0,

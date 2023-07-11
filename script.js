@@ -25,8 +25,9 @@ async function loadMidiFileBufferFromURL(url) {
 
 async function updateSequence(data, midiBuffer, fragmentIndex, variantIndex, player, visualizer) {
   const sequence = await sequenceFromFragmentIndex(data, midiBuffer, fragmentIndex, variantIndex);
-  player.noteSequence = sequence;
+  const sequenceSustained = core.sequences.applySustainControlChanges(sequence);
   visualizer.noteSequence = sequence;
+  player.noteSequence = sequenceSustained;
 }
 
 async function sequenceFromFragmentIndex(data, midiFileBuffer, fragmentIndex, phraseIndex) {
@@ -36,7 +37,6 @@ async function sequenceFromFragmentIndex(data, midiFileBuffer, fragmentIndex, ph
 }
 
 async function sliceMidiFileBufferToSequence(midiFileBuffer, start, end, start_time, finish_time) {
-    console.log(start_time,finish_time);
     const parsed = new Midi(midiFileBuffer);
     const fragment = parsed.clone();
     window.parsed = parsed;
@@ -48,8 +48,26 @@ async function sliceMidiFileBufferToSequence(midiFileBuffer, start, end, start_t
     const startTick = notes[0].ticks
     notes.forEach(note => note.ticks -= startTick)
     fragment.tracks[0].notes = notes;
+
+    const controls = parsed.tracks[0].controlChanges[64].filter(cc => cc.ticks >= startTick && cc.time <= finish_time);
+    controls.forEach(cc => cc.ticks -= startTick)
+    fragment.tracks[0].controlChanges[64] = controls
+
+    // // manual test of sustain
+    // fragment.tracks[0].controlChanges = [];
+    // fragment.tracks[0].addCC({
+    //   number : 64,
+    //   value : 1,
+    //   time : 4.0
+    // });
+    // fragment.tracks[0].addCC({
+    //   number : 64,
+    //   value : 0,
+    //   time : 12.0
+    // });
+
     window.fragment = fragment;
-        
+
     const output = fragment.toArray();
     const outputBuffer = buffer.Buffer.from(output);
     const outputBlob = new Blob([outputBuffer]);
