@@ -6,7 +6,7 @@ const dataURL = './tester.json';
 
 window.player = document.getElementById('myPlayer');
 window.visualizer = document.getElementById('myVisualizer');
-visualizer.config = {minPitch: 0, maxPitch: 127};
+visualizer.config = {minPitch: 40, maxPitch: 80};
 
 // Directly set player URL
 // player.src = midiFileURL;
@@ -26,7 +26,7 @@ async function loadMidiFileBufferFromURL(url) {
 async function updateSequence(data, midiBuffer, fragmentIndex, variantIndex, player, visualizer) {
   const sequence = await sequenceFromFragmentIndex(data, midiBuffer, fragmentIndex, variantIndex);
   const sequenceSustained = core.sequences.applySustainControlChanges(sequence);
-  visualizer.noteSequence = sequence;
+  visualizer.noteSequence = sequenceSustained;
   player.noteSequence = sequenceSustained;
 }
 
@@ -52,6 +52,9 @@ async function sliceMidiFileBufferToSequence(midiFileBuffer, start, end, start_t
     const controls = parsed.tracks[0].controlChanges[64].filter(cc => cc.ticks >= startTick && cc.time <= finish_time);
     controls.forEach(cc => cc.ticks -= startTick)
     fragment.tracks[0].controlChanges[64] = controls
+  console.log(controls)
+  console.log('=============')
+  console.log(notes)
 
     // // manual test of sustain
     // fragment.tracks[0].controlChanges = [];
