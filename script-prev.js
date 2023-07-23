@@ -4,8 +4,8 @@ import * as buffer from "https://cdn.skypack.dev/buffer@6.0.3";
 const parseMidi = midiFile.parseMidi;
 const writeMidi = midiFile.writeMidi;
 
-const midiFileURL = './recording.mid';
-const dataURL = './data.json';
+const midiFileURL = './bb01.fragments.mid';
+const dataURL = './bb01.fragments.json';
 
 window.player = document.getElementById('myPlayer');
 window.visualizer = document.getElementById('myVisualizer');
@@ -46,7 +46,9 @@ async function sliceMidiFileBufferToSequence(midiFileBuffer, start_time, finish_
 
   const magic_factor = 2 * parsed.header.ticksPerBeat;
 
-  let events = parsed.tracks[0]
+  // let events = parsed.tracks[0]
+  let events = parsed.tracks.reduce((acc, val) => acc.concat(val), []);
+
   let totalTime = 0;
   events = events.map(event => {
     totalTime += event.deltaTime / magic_factor;
@@ -58,7 +60,9 @@ async function sliceMidiFileBufferToSequence(midiFileBuffer, start_time, finish_
   // const fragment_notes = notes.slice(start_index * 2,end_index * 2);
 
   const fragment_notes = events.filter(event => event.totalTime >= start_time && event.totalTime <= finish_time);
-  fragment.tracks[0] = fragment_notes
+  fragment.tracks = [fragment_notes]
+  console.log(fragment_notes.slice(0, 10))
+  console.log('-----------')
 
   const output = writeMidi(fragment);
   const outputBuffer = buffer.Buffer.from(output);
